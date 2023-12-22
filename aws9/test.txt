@@ -1,0 +1,10 @@
+
+
+hadoop fs -mkdir /input
+hadoop fs -put C:\Users\hriti\OneDrive\Desktop\aws9\hadoop2.1\hadoop3\iris.csv /lab9
+
+ hadoop jar C:/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file C:/Users/hriti/OneDrive/Desktop/aws9/mapper1.py -mapper "python mapper1.py" -file C:/Users/hriti/OneDrive/Desktop/aws9/reducer1.py -reducer "python reducer1.py" -input /lab9/input.txt -output /lab9/out2
+
+ hadoop jar C:/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file C:/Users/hriti/OneDrive/Desktop/aws9/hadoop2.1/wordcountcombiner/mapper1.py  -mapper "python mapper1.py" -file C:/Users/hriti/OneDrive/Desktop/aws9/hadoop2.1/wordcountcombiner/reducer1.py -reducer "python reducer1.py" -file C:/Users/hriti/OneDrive/Desktop/aws9/hadoop2.1/wordcountcombiner/combiner.py -combiner "python combiner.py" -input /lab9/input2.txt -output /lab9/output3
+
+  hadoop jar C:/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file C:\Users\hriti\OneDrive\Desktop\aws9\hadoop2.1\hadoop3\mapper.py  -mapper "python mapper.py" -file C:\Users\hriti\OneDrive\Desktop\aws9\hadoop2.1\hadoop3\reducer.py -reducer "python reducer.py"  -input /lab9/iris.csv -output /lab9/output4

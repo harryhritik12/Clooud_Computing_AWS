@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Personal Information</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color:white;
+      background-size: cover;  
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      background-color:white;
+      color:black;
+      border-radius: 10px;
+      /* box-shadow: 0 5px 10px rgba(0,0,0,0.15); */
+    }
+    .info {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+    .title {
+      font-weight: bold;
+    }
+    .img-container {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 55px;
+    }
+    img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+    }
+    /* Feedback Form CSS */
+    .feedback-form {
+      background-color:white;
+      padding: 30px;
+      border-radius: 10px;
+      /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.38); */
+      margin-top: 30px;
+      text-align: center;
+    }
+    .feedback-form input[type="text"], .feedback-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      border: none;
+    }
+    .feedback-form button {
+      padding: 10px 15px;
+      background-color:white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .feedback-form button:hover {
+      background-color: white;
+    }
+    /* Styles for the feedback result */
+    #feedbackResult {
+        margin-top: 20px;
+        font-weight: bold;
+        color: rgb(4, 14, 15);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>About section</h1>
+    </div>
+    <div class="info">
+      <div class="title">Name:</div>
+      <div>Hritik Panakj</div>
+      <div class="title">Address:</div>
+      <div>I don't want to reveal</div>
+      <div class="title">Date of Birth:</div>
+      <div>Feb,18, 2003</div>
+      <div class="title">Gender:</div>
+      <div>Male</div>
+      <div class="title">Age:</div>
+      <div>20</div>
+      <div class="title">School Name:</div>
+      <div>DAV Public School</div>
+      <div class="title">College Name:</div>
+      <div>Indian Institute of Information Technology, Bongora</div>
+    </div>
+
+    <!-- Feedback Form HTML -->
+    <div class="feedback-form">
+      <h2>What you like about this site</h2>
+      <form id="feedbackForm">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+          <button type="submit">Submit</button>
+      </form>
+      <div id="feedbackResult"></div>
+    </div>
+
+    <!-- Placeholders for Recommendations and Skills -->
+    <div class="recommendation-form">
+      <h2>Give your task: </h2>
+      <form id="recommendationForm">
+          <input type="text" name="skill" required>
+          <button type="submit">Submit task</button>
+      </form>
+      <div id="recommendationResult"></div>
+    </div>
+    <div class="add-skills">
+      <h2>Your Intrests: </h2>
+      <select id="skillSelect"></select>
+      <button onclick="addUserSkill()">submit</button>
+  </div>
+  
+  <!-- List of user's skills -->
+  <div class="user-skills">
+      <h2>List your Intrests: </h2>
+      <ul id="userSkillsList"></ul>
+  </div>
+  </div>
+
+  <!-- JavaScript to handle form submission and interaction with the feedback microservice -->
+  <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+        event.preventDefault(); 
+        const name = document.querySelector("input[name='name']").value;
+        const message = document.querySelector("textarea[name='message']").value;
+    
+        fetch("http://localhost:8080/feedback", { // Modified URL
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: name, feedback: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("feedbackResult").innerText = data.status;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            document.getElementById("feedbackResult").innerText = "Error submitting feedback!";
+        });
+    });
+    </script>
+    
+    <script>
+      document.getElementById("recommendationForm").addEventListener("submit", function(event) {
+          event.preventDefault(); 
+          const skill = document.querySelector("input[name='skill']").value;
+      
+          fetch("http://localhost:8080/recommend", { // Modified URL
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ skill: skill })
+          })
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById("recommendationResult").innerText = data.status;
+          })
+          .catch(error => {
+              console.error("Error:", error);
+              document.getElementById("recommendationResult").innerText = "Error submitting recommendation!";
+          });
+      });
+      </script>
+      
+      <script>
+        function fetchAllSkills() {
+            fetch("http://localhost:8080/all-skills") // Modified URL
+            .then(response => response.json())
+            .then(data => {
+                const selectElem = document.getElementById("skillSelect");
+                data.skills.forEach(skill => {
+                    const option = document.createElement("option");
+                    option.value = skill;
+                    option.textContent = skill;
+                    selectElem.appendChild(option);
+                });
+            });
+        }
+        
+        function addUserSkill() {
+            const selectedSkill = document.getElementById("skillSelect").value;
+        
+            fetch("http://localhost:8080/add-user-skill", { // Modified URL
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ skill: selectedSkill })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status.includes("added")) {
+                    const ulElem = document.getElementById("userSkillsList");
+                    const li = document.createElement("li");
+                    li.textContent = data.skill;
+                    ulElem.appendChild(li);
+                } else {
+                    alert(data.status);
+                }
+            });
+        }
+        
+        fetchAllSkills();
+        </script>
+        
+</body>
+</html>

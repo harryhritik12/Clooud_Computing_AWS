@@ -1,0 +1,19 @@
+version: '7'
+services:
+  feedback-service:
+    build:
+      context: ./feedback-service
+    ports:
+      - "3000:3000"
+
+  recommendation-service:
+    build:
+      context: ./recommendation-service
+    ports:
+      - "4000:4000"
+
+  skills-service:
+    build:
+      context: ./skill-service
+    ports:
+      - "5000:5000"

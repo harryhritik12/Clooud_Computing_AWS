@@ -1,0 +1,6 @@
+
+
+hadoop fs -mkdir /input
+hadoop fs -put "C:\Users\hriti\OneDrive\Desktop\aws9\input.txt" /lab9
+
+ hadoop jar C:/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file C:/Users/hriti/OneDrive/Desktop/aws9/mapper.py -mapper "python mapper.py" -file C:/Users/hriti/OneDrive/Desktop/aws9/reducer.py -reducer "python reducer.py" -input /lab9/big.txt -output /lab9/out2

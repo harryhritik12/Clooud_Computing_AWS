@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Webpage</title>
+</head>
+<body>
+    <h1>I love coffee</h1>
+    <p>Hello world!</p>
+
+    
+    <!-- CORS demo -->
+    <div id="tofetch"></div>
+
+    <!-- Feedback Form -->
+    <h2>Feedback Form</h2>
+    <form id="feedbackForm">
+        <label for="feedback">Feedback:</label><br>
+        <textarea id="feedback" name="feedback" rows="4" cols="50" required></textarea><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        var tofetch = document.getElementById("tofetch");
+
+        fetch('http://demo-other-origin-stephane.s3-website.ca-central-1.amazonaws.com/extra-page.html')
+        .then((response) => {
+            return response.text();
+        })
+        .then((html) => {
+            tofetch.innerHTML = html;
+        });
+
+        // Feedback Form Submission
+        document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var feedback = document.getElementById("feedback").value;
+
+            // You can add code here to send the feedback data to your server or perform other actions.
+            // For this example, we'll just display the feedback in the console.
+            console.log("Feedback: " + feedback);
+
+            // Optionally, you can clear the form fields after submission.
+            document.getElementById("feedback").value = "";
+        });
+    </script>
+</body>
+</html>
